@@ -192,6 +192,12 @@ two decimal places. Tests are ordered by subtask and then test ID. Each
 subtask JSON file contains its numeric score and the CMS test names selected
 at the interactive prompt.
 
+Import the generated archive into CMS with:
+
+```bash
+cmsImportTask sum-CMS-26-07-28-14-30-00.zip
+```
+
 ## Current command status
 
 `contest create`, `team create`, and `team add` are registered commands but
