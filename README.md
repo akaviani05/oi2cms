@@ -192,10 +192,16 @@ two decimal places. Tests are ordered by subtask and then test ID. Each
 subtask JSON file contains its numeric score and the CMS test names selected
 at the interactive prompt.
 
-Import the generated archive into CMS with:
+Import the unpacked export into CMS with the TPS task loader:
 
 ```bash
-cmsImportTask sum-CMS-26-07-28-14-30-00.zip
+cmsImportTask -L tps_task -S sum-CMS-26-07-28-14-30-00/
+```
+
+To attach the task to an existing contest, add its numeric CMS contest ID:
+
+```bash
+cmsImportTask -L tps_task -S -c CONTEST_ID sum-CMS-26-07-28-14-30-00/
 ```
 
 ## Current command status
