@@ -2,7 +2,7 @@
 
 `oi2cms` is a command-line helper for turning an Olympiad problem package into
 a CMS (Contest Management System) import archive. It discovers input/output
-files in either COCI- or USACO-style layouts, assigns them to subtasks, copies
+files in COCI, USACO, or user-defined layouts, assigns them to subtasks, copies
 the checker, and creates a timestamped ZIP archive ready to import into CMS.
 
 ## Features
@@ -10,6 +10,8 @@ the checker, and creates a timestamped ZIP archive ready to import into CMS.
 - Export COCI-style test packages to the CMS directory format.
 - Export USACO-style numbered test packages, assigning test numbers to
   subtasks interactively.
+- Export packages with custom filename templates using subtask and test-ID
+  placeholders.
 - Include a custom checker or use the included line-by-line default checker.
 - Generate `problem.json`, test input/output pairs, per-subtask JSON files,
   and a `checker/` directory.
@@ -50,6 +52,7 @@ The available problem exporters are:
 ```text
 oi2cms problem coci-problem PATH [--checker CHECKER]
 oi2cms problem usaco-problem PATH [--checker CHECKER]
+oi2cms problem pattern-problem PATH [--checker CHECKER]
 ```
 
 For shell completion, see `oi2cms --help`; Typer exposes
@@ -158,6 +161,29 @@ Enter testcases in subtask 2: 6-7,9-10
 It next asks for the shared CMS metadata and each subtask's score and included
 subtasks, just as in the COCI flow.
 
+## Pattern-based export
+
+Use `pattern-problem` when the input and output names encode both the subtask
+and the test index but do not follow the COCI or USACO conventions:
+
+```bash
+poetry run oi2cms problem pattern-problem ./trap
+```
+
+Enter an input filename pattern and an output filename pattern. Use `$s` for
+the subtask and `$i` for the test index; each placeholder must occur exactly
+once in each pattern. Everything else is treated as literal filename text.
+For example, for files such as `trap.01.02.in` and `trap.01.02.out`, enter:
+
+```text
+Enter input filename pattern ($s=subtask, $i=index): trap.$s.$i.in
+Enter output filename pattern ($s=subtask, $i=index): trap.$s.$i.out
+```
+
+This discovers the pair as subtask `01`, test `02`, then prompts for the time
+and memory limits plus the score and included-subtask relation for every
+discovered subtask, like the other exporters.
+
 ## Generated archive
 
 An export of problem `sum` creates a directory and ZIP file named like:
@@ -209,7 +235,7 @@ cmsImportTask -L tps_task -S -c CONTEST_ID sum-CMS-26-07-28-14-30-00/
 `contest create`, `team create`, and `team add` are registered commands but
 are placeholders; they do not currently create CMS contests, teams, or users.
 The `hello` commands are simple smoke-test commands. The production workflow
-in this version is the two `problem` exporters described above.
+in this version is the three `problem` exporters described above.
 
 ## Notes and limitations
 

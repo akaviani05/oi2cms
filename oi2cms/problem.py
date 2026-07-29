@@ -44,6 +44,24 @@ def export_usaco_problem(path:str, checker:str = None):
         problem.checker = checker
     export_cms(problem)
 
+@app.command(name="pattern-problem")
+def export_pattern_problem(path: str, checker: str = None):
+    """Export tests whose filenames use $s for subtask and $i for test ID."""
+    input_template = input("Enter input filename pattern ($s=subtask, $i=index): ")
+    output_template = input("Enter output filename pattern ($s=subtask, $i=index): ")
+    try:
+        testcases = find_testcases_from_templates(
+            path, input_template, output_template
+        )
+    except ValueError as error:
+        raise typer.BadParameter(str(error))
+
+    name = path.rstrip("/").split("/")[-1]
+    problem = Problem(name, name, testcases)
+    if checker is not None:
+        problem.checker = checker
+    export_cms(problem)
+
 @app.command()
 def hello():
     print("Hello World!")
